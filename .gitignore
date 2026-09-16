@@ -1,0 +1,13 @@
+node_modules
+.DS_Store
+.vscode
+.idea
+.env
+.env.*
+# Outputs of a local inventory run. CI uploads them as artifacts; they are never committed.
+dependency-sbom.cyclonedx.json
+dependency-inventory.json
+*.inventory.json
+CATALOG.json
+CATALOG.md
+.dep-inventory/

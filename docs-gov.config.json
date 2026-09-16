@@ -1,0 +1,31 @@
+{
+  "include": ["README.md", "AGENTS.md", "docs/**/*.md"],
+  "indexes": ["README.md"],
+  "tokenBudgets": {
+    "perDoc": 2600,
+    "bankSlack": 0.25,
+    "overrides": [],
+    "contextSets": []
+  },
+  "structure": {
+    "maxHeadingDepth": 4,
+    "summaryWithinTokens": 250,
+    "requiredFields": []
+  },
+  "antiPatterns": {
+    "positionalReferences": true,
+    "unresolvedPlaceholders": true,
+    "duplicateParagraphs": {
+      "minLength": 160,
+      "allow": []
+    },
+    "terminology": []
+  },
+  "integrity": {
+    "links": true,
+    "orphans": true,
+    "stalePaths": {
+      "roots": ["docs", "tools", ".github"]
+    }
+  }
+}

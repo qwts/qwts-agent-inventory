@@ -1,0 +1,12 @@
+{
+  "manifests": {
+    "npm": ["package.json"]
+  },
+  "workflows": [".github/workflows/*.yml", ".github/workflows/*.yaml"],
+  "toolConfigs": [
+    ".markdownlint.json",
+    "docs-gov.config.json",
+    "dependency-inventory.config.json",
+    "inventory-defaults.config.json"
+  ]
+}

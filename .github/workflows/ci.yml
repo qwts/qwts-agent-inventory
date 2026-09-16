@@ -1,0 +1,45 @@
+# CI for the inventory capability: unit tests over the normalizer, a smoke run
+# of the normalizer against this repository's own config, and the Markdown
+# lint. The repository is public, so the job runs on the hosted runner.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Unit tests
+        run: npm test
+      # Syft produces the real SBOM and runs only inside the reusable workflow.
+      # The fixture SBOM stands in here, so the run exercises this repository's
+      # config, workflow globs, and tool-config globs without network access.
+      - name: Smoke-run the normalizer against this repository's config
+        env:
+          GENERATED_AT: ${{ github.sha }}
+        run: |
+          npm run inventory -- \
+            --sbom tools/dependency-inventory/tests/fixtures/sbom.cyclonedx.json \
+            --root . \
+            --repo qwts-agent-inventory \
+            --generated-at "$GENERATED_AT"
+      - name: Markdown lint
+        run: npm run lint:markdown

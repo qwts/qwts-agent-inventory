@@ -58,8 +58,8 @@ The reusable workflow checks out the caller, runs Syft, fetches this repo's
 normalizer, and uploads `dependency-inventory.json` as an artifact. Consumers
 pin the workflow to a full commit SHA, recorded as the `inventory` capability in
 [qwts-agent-org](https://github.com/qwts/qwts-agent-org) (qwts/agent-sop#371,
-#372); `tooling-ref` defaults to the `v1` tag, so pass the same SHA to run the
-normalizer at the pinned revision.
+#372); `tooling-ref` has no default and an empty value fails the job, so pass
+the same SHA to run the normalizer at the pinned revision.
 
 ## The fleet catalog
 
@@ -79,7 +79,7 @@ the reusable workflow itself was consumed at the moving `@v1` tag when it lived
 in agent-sop. That split was deliberate (ENG-0005): external code is pinned to
 an immutable commit, and the org's own workflows rode a tag its CI gated before
 moving. Under the fleet split consumers pin this workflow to a commit SHA as
-well, so the asymmetry now lives only in the `tooling-ref` default. The
+well, and `tooling-ref` fails closed when empty, so the asymmetry is gone. The
 inventory reports pin status precisely so the first half of that policy stays
 visible.
 

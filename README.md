@@ -14,7 +14,7 @@ Extracted from [qwts/agent-sop](https://github.com/qwts/agent-sop) at commit `ed
 
 ## Adopting the workflow in a repository
 
-Call the workflow pinned to a full commit SHA of this repository, and pass the same SHA as `tooling-ref` so the normalizer runs at the revision you pinned (the input defaults to the `v1` tag):
+Call the workflow pinned to a full commit SHA of this repository, and pass the same SHA as `tooling-ref` so the normalizer runs at the revision you pinned (the input has no default; an empty value fails the job):
 
 ```yaml
 jobs:
@@ -24,7 +24,7 @@ jobs:
       tooling-ref: <40-hex-sha>
 ```
 
-Inputs: `config` (path to the config file, default `dependency-inventory.config.json`); `tooling-ref` (ref of this repository to take the normalizer from, default `v1`); `runs-on` (JSON array of runner labels, default `["ubuntu-latest"]`); `use-local-tooling` (run the normalizer from the caller's own checkout, default `false`); `fail-on-error` (fail the job when Syft or the normalizer errors, default `false` — the inventory is report-only).
+Inputs: `config` (path to the config file, default `dependency-inventory.config.json`); `tooling-ref` (commit SHA of this repository to take the normalizer from; required unless `use-local-tooling` is true, an empty value fails closed); `runs-on` (JSON array of runner labels, default `["ubuntu-latest"]`); `use-local-tooling` (run the normalizer from the caller's own checkout, default `false`); `fail-on-error` (fail the job when Syft or the normalizer errors, default `false` — the inventory is report-only).
 
 Commit a `dependency-inventory.config.json` at the repository root naming what counts:
 

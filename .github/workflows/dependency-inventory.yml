@@ -23,15 +23,18 @@ on:
         type: string
         default: dependency-inventory.config.json
       tooling-ref:
-        description: Ref of qwts/qwts-agent-inventory to take the normalizer from
+        description: >-
+          Commit SHA of qwts/qwts-agent-inventory to take the normalizer from.
+          Pass the same SHA as the `uses:` line. Required unless
+          use-local-tooling is true; an empty value fails closed.
         type: string
-        default: v1
+        default: ''
       runs-on:
         description: JSON array of runner labels for the job. Default is the hosted runner so consumers are unaffected.
         type: string
         default: '["ubuntu-latest"]'
       use-local-tooling:
-        description: Run the normalizer from the caller's own checkout (this repo's self-test; exercises the un-tagged tooling before v1 moves)
+        description: Run the normalizer from the caller's own checkout (this repo's self-test; exercises the tooling in the caller's checkout)
         type: boolean
         default: false
       fail-on-error:
@@ -64,6 +67,18 @@ jobs:
           # to a consumer's release (upload-release-assets defaults to true).
           upload-artifact: false
           upload-release-assets: false
+
+      - name: Require a tooling ref
+        if: ${{ !inputs.use-local-tooling }}
+        env:
+          TOOLING_REF: ${{ inputs.tooling-ref }}
+        run: |
+          # An empty ref would make actions/checkout fall back to the default
+          # branch, the drift the pin exists to prevent, so fail closed.
+          if [ -z "$TOOLING_REF" ]; then
+            echo '::error::tooling-ref is required: pass the same commit SHA as the uses: line'
+            exit 1
+          fi
 
       - name: Fetch inventory tooling
         if: ${{ !inputs.use-local-tooling }}
